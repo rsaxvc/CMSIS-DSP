@@ -113,23 +113,17 @@ void arm_bitreversal_16(
   const uint16_t bitRevLen,
   const uint16_t *pBitRevTab)
 {
-  uint16_t a, b, tmp;
-  uint32_t i;
+  uint32_t a, b, i, tmp;
 
   for (i = 0; i < bitRevLen; )
   {
      a = pBitRevTab[i    ] >> 2;
      b = pBitRevTab[i + 1] >> 2;
 
-     //real
-     tmp = pSrc[a];
-     pSrc[a] = pSrc[b];
-     pSrc[b] = tmp;
-
-     //complex
-     tmp = pSrc[a+1];
-     pSrc[a+1] = pSrc[b+1];
-     pSrc[b+1] = tmp;
+     //real+complex
+     memcpy(&tmp, &pSrc[a], sizeof(tmp));
+     memcpy(&pSrc[a], &pSrc[b], sizeof(tmp));
+     memcpy(&pSrc[b], &tmp, sizeof(tmp));
 
     i += 2;
   }
